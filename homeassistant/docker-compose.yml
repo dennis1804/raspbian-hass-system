@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    container_name: homeassistant
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./homeassistant:/config
+    network_mode: host
+    depends_on:
+      - mysql
+      # - deconz
+      #user: "${LOCAL_USER}:${LOCAL_USER}"
+  mysql:
+    image: mysql/mysql-server:8.0
+    container_name: mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: ha_db
+      MYSQL_USER: homeassistant
+      MYSQL_PASSWORD: "${HA_MYSQL_PASSWORD}"
+        # user: "${LOCAL_USER}:${LOCAL_USER}"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
