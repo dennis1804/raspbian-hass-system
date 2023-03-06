@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./homeassistant:/config
+      - ./config:/config
     network_mode: host
     depends_on:
       - mysql
@@ -27,3 +27,13 @@ services:
       - ./mysql:/var/lib/mysql
     ports:
       - "3306:3306"
+  deconz:
+    image: marthoc/deconz
+    container_name: deconz
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/dennis/.local/share/dresden-electronik/deCONZ:/root/.local/share/dresden-electronik/deCONZ
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
